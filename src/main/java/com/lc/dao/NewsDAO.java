@@ -18,5 +18,5 @@ public interface NewsDAO {
 	@Select({"SELECT " + SELECT_FILEDS +"  FROM " + TABLE_NAME + " WHERE id = #{id}"
 			+ " ORDER BY id DESC LIMIT #{offset}, #{limit}"})
 	List<News> getLastestNews(@Param("id")int id, @Param("offset")int offset, @Param("limit")int limit);
-	
+ 
 }

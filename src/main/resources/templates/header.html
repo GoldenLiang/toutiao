@@ -1,99 +1,59 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>头条资讯 - 牛客网</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="keywords" content="读《Web 全栈工程师的自我修养》">
+    <meta name="description" content="阅读影浅分享的读《Web 全栈工程师的自我修养》，就在牛客网。">
 
-	<title>最新分享 - 头条</title>
-	
-	<link rel="stylesheet" type="text/css" href="https://staticfile.qnssl.com/twitter-bootstrap/3.3.0/css/bootstrap.min.css">
-	<link
-		href="https://cdn.staticfile.org/font-awesome/4.6.3/css/font-awesome.min.css"
-		rel="stylesheet">
-	
-	<link rel="stylesheet" media="all"
-		href="/assets/application-dbb84fada0409a181e0cbbd97d2c4ac1.css" />
-	
-	<script src="/assets/application-63d9cfc2750d0d5687bd2d04f5ce5ce8.js"></script>
-	
-	<script type="text/javascript"
-		src="//staticfile.qnssl.com/twitter-bootstrap/3.3.0/js/bootstrap.min.js"></script>
-	<script type="text/javascript"
-	src="//staticfile.qnssl.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/styles/font-awesome.min.css">
+
+    <link rel="stylesheet" media="all" href="/styles/style.css">
+    <script type="text/javascript" src="/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/base.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/util.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/event.js"></script>
+    <script type="text/javascript" src="/scripts/main/base/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/component.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popup.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupLogin.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/upload.js"></script>
+    <script type="text/javascript" src="/scripts/main/component/popupUpload.js"></script>
+    <script type="text/javascript" src="/scripts/main/util/action.js"></script>
+
 </head>
+<body class="welcome_index">
 
-<body>
+<header class="navbar navbar-default navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
 
-	<header class="navbar-default navbar-static-top bs-dics-nav" id="top" role="banana">
-		<div class="container">
-			<div class="navbar-header">
-				<div class="navbar-toggle collapsed" type="button"
-					data-toggle="collapse" data-target=".bs-navbar-collapse">
-					<span class="sr-only">Toggle navigation</span> 
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span> 
-					<a href="/" class="navbar-brand logo">
-						<h1>开发者头条</h1>
-						<h3>程序员分享平台</h3>
-					</a>
-				</div>
+            <a href="/" class="navbar-brand logo">
+                <h1>头条资讯</h1>
+                <h3>你关心的才是头条</h3>
+            </a>
+        </div>
 
-				<nav class="collapse navbar-collapse bs-navbar-collapse"
-					role="navigation">
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 
-					<ul class="nav navbar-nav navbar-right">
-						<li class=""><a href="/explore">独家号</a></li>
-						<li class=""><a href="/posts/hot/7">热门分享</a></li>
-						<li class=""><a href="/contribute">分享</a></li>
-						<li class=""><a href="/account/subscriptions">订阅</a></li>
-						<li class=""><a href="/search">搜索</a></li>
-						<li><a href="/signin">登录</a></li>
-						<li class="active"><a href="/c/java">Java</a></li>
-						<li class=""><a href="/c/ios">iOS</a></li>
-						<li class=""><a href="/c/fe">前端</a></li>
-						<li class="dropdown"><a href class="dropdown-toggle clear"
-							data-toggle="dropdown"> <span>更多</span> <b class="caret"></b>
-						</a>
-							<ul class="dropdown-menu animated fadeInRight w">
-								<li><a href="/c/arch">架构</a></li>
-								<li><a href="/c/be">后端</a></li>
-								<li><a href="/c/bigdata">大数据</a></li>
-							</ul></li>
-					</ul>
+            <ul class="nav navbar-nav navbar-right">
 
-				</nav>
-			</div>
-		</div>
-	</header>
-
-	<div class="subject-name">
-		<a href="/subjects/15775">V2EX</a>
-	</div>
-
-
-	<div class="post">
-		<div class="btn-group-vertical upvote">
-			<a class="btn btn-default like-button" title="登录后点赞" href="/signin"><i
-				class="fa fa-thumbs-o-up"></i> <span>0</span></a> <a
-				class="btn btn-default btn-xs favorite-button" title="登录后收藏"
-				href="/signin"><i class="fa fa-bookmark-o"></i> <span>0</span></a>
-		</div>
-
-
-		<div class="content" data-url="/posts/bld2ym">
-			<h3 class="title">
-				<a target="_blank" rel="external"
-					title="Android 一套完整的 Socket 解决方案 - 开发者头条" href="/k/bld2ym">Android
-					一套完整的 Socket 解决方案</a>
-			</h3>
-
-
-			<div class="meta">
-				mp.weixin.qq.com <span> <i class="fa fa-comment-o"></i> 0
-				</span>
-
-			</div>
-		</div>
-	</div>
-	
-</body>
-</head>
-</html>
+                #if ($user)
+                <li class="js-share"><a href="javascript:void(0);">分享</a></li>
+                <li class=""><a href="/msg/list">站内信</a></li>
+                <li class=""><a href="/user/$!{user.id}/">$!{user.name}</a></li>
+                #else
+                <li class="js-login"><a href="javascript:void(0);">登陆</a></li>
+                #end
+            </ul>
+            
+        </nav>
+    </div>
+</header>

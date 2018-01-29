@@ -11,7 +11,7 @@ public class News {
 	String content;
 	Date createdDate;
 	String image;
-	
+
 	public int getId() {
 		return id;
 	}

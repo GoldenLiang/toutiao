@@ -19,5 +19,5 @@ public class NewsServiceImpl implements NewsService {
 	public List<News> getLastestNews(int id, int offset, int limit) {
 		return newsDAO.getLastestNews(id, offset, limit);
 	}
-	
+	   
 }

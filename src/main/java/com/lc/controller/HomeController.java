@@ -27,9 +27,9 @@ public class HomeController {
 	@RequestMapping(path={"/", "/index"}, method={RequestMethod.GET, RequestMethod.POST})
 	public String header(Model model) {
 		model.addAttribute("vo", getNews(0, 0, 10));
-		return "header";
+		return "home";
 	}
-
+ 
 	private List<ViewObject> getNews(int id, int offset, int limit) {
 		List<News> newslist =  newsService.getLastestNews(id, offset, limit);
 		List<ViewObject> vos = new ArrayList<>();
@@ -40,7 +40,7 @@ public class HomeController {
 			
 			vos.add(vo);
 		}
-		
+		 
 		return vos;
 	}
 }
