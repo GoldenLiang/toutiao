@@ -1,22 +1,25 @@
 package com.lc.dao;
 
-import java.util.List;
-
+import com.lc.model.News;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
-import com.lc.model.News;
+import java.util.List;
 
+/**
+ * Created by lc on 2016/7/2.
+ */
 @Mapper
 public interface NewsDAO {
+    String TABLE_NAME = "news";
+    String INSERT_FIELDS = " title, link, image, like_count, comment_count, created_date, user_id ";
+    String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
-	String TABLE_NAME = "news";
-	String SELECT_FILEDS = "id, title, link, image, created_date, user_id";
-	String UPDATE_FILEDS = "title, link, image, created_date, user_id";
-	
-	@Select({"SELECT " + SELECT_FILEDS +"  FROM " + TABLE_NAME + " WHERE id = #{id}"
-			+ " ORDER BY id DESC LIMIT #{offset}, #{limit}"})
-	List<News> getLastestNews(@Param("id")int id, @Param("offset")int offset, @Param("limit")int limit);
- 
+    @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
+            ") values (#{title},#{link},#{image},#{likeCount},#{commentCount},#{createdDate},#{userId})"})
+    int addNews(News news);
+
+    List<News> selectByUserIdAndOffset(@Param("userId") int userId, @Param("offset") int offset,
+                                       @Param("limit") int limit);
 }

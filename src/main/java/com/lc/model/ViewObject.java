@@ -1,20 +1,19 @@
 package com.lc.model;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 视图展示对象
- * @author lc
+ * Created by rainday on 16/6/30.
  */
 public class ViewObject {
-	
-	HashMap<String, Object> map = new HashMap<>();
-	
-	public void set(String key, Object value) {
-		map.put(key, value);
-	}
+    private Map<String, Object> objs = new HashMap<String, Object>();
 
-	public Object get(String key) {
-		return map.get(key);
-	}
+    public void set(String key, Object value) {
+        objs.put(key, value);
+    }
+
+    public Object get(String key) {
+        return objs.get(key);
+    }
 }
