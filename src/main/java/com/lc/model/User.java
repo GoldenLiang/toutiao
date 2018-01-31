@@ -1,7 +1,7 @@
 package com.lc.model;
 
 /**
- * Created by lc on 2016/6/26.
+ * Created by lc on 2017/6/26.
  */
 public class User {
     private int id;
@@ -13,7 +13,6 @@ public class User {
     public User() {
 
     }
-
     public User(String name) {
         this.name = name;
         this.password = "";

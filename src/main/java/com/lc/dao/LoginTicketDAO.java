@@ -1,10 +1,11 @@
 package com.lc.dao;
 
 import com.lc.model.LoginTicket;
+import com.lc.model.User;
 import org.apache.ibatis.annotations.*;
 
 /**
- * Created by lc on 2016/7/2.
+ * Created by lc on 2017/7/2.
  */
 @Mapper
 public interface LoginTicketDAO {

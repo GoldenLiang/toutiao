@@ -8,16 +8,13 @@ import com.lc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lc on 2016/7/2.
+ * Created by lc on 2017/7/2.
  */
 @Controller
 public class HomeController {
@@ -47,6 +44,9 @@ public class HomeController {
     public String index(Model model,
                         @RequestParam(value = "pop", defaultValue = "0") int pop) {
         model.addAttribute("vos", getNews(0, 0, 10));
+        if (hostHolder.getUser() != null) {
+            pop = 0;
+        }
         model.addAttribute("pop", pop);
         return "home";
     }

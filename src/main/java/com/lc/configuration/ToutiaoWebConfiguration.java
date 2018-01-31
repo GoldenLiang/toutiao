@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * Created by lc on 2016/7/3.
+ * Created by lc on 2017/7/3.
  */
 @Component
 public class ToutiaoWebConfiguration extends WebMvcConfigurerAdapter {
@@ -21,7 +21,7 @@ public class ToutiaoWebConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(passportInterceptor);
-        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/setting*");
+        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/msg/*");
         super.addInterceptors(registry);
     }
 }

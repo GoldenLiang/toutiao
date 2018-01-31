@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * Created by lc on 2016/7/2.
+ * Created by lc on 2017/7/2.
  */
 @Service
 public class UserService {
@@ -50,7 +50,7 @@ public class UserService {
         user.setSalt(UUID.randomUUID().toString().substring(0, 5));
         String head = String.format("http://images.lc.com/head/%dt.png", new Random().nextInt(1000));
         user.setHeadUrl(head);
-        user.setPassword(ToutiaoUtil.MD5(password + user.getSalt()));
+        user.setPassword(ToutiaoUtil.MD5(password+user.getSalt()));
         userDAO.addUser(user);
 
         // 登陆
@@ -79,7 +79,7 @@ public class UserService {
             return map;
         }
 
-        if (!ToutiaoUtil.MD5(password + user.getSalt()).equals(user.getPassword())) {
+        if (!ToutiaoUtil.MD5(password+user.getSalt()).equals(user.getPassword())) {
             map.put("msgpwd", "密码不正确");
             return map;
         }
@@ -93,7 +93,7 @@ public class UserService {
         LoginTicket ticket = new LoginTicket();
         ticket.setUserId(userId);
         Date date = new Date();
-        date.setTime(date.getTime() + 1000 * 3600 * 24);
+        date.setTime(date.getTime() + 1000*3600*24);
         ticket.setExpired(date);
         ticket.setStatus(0);
         ticket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));

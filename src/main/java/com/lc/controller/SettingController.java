@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Created by lc on 2016/6/26.
+ * Created by lc on 2017/6/26.
  */
 @Controller
 public class SettingController {

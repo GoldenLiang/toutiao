@@ -3,7 +3,7 @@ package com.lc.model;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by lc on 2016/7/3.
+ * Created by lc on 2017/7/3.
  */
 @Component
 public class HostHolder {
@@ -18,7 +18,6 @@ public class HostHolder {
     }
 
     public void clear() {
-        users.remove();
-        ;
+        users.remove();;
     }
 }

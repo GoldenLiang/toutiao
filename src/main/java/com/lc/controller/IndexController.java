@@ -1,12 +1,18 @@
 package com.lc.controller;
 
+import com.lc.aspect.LogAspect;
 import com.lc.model.User;
 import com.lc.service.ToutiaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.Banner;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
- * Created by lc on 2016/6/26.
+ * Created by lc on 2017/6/26.
  */
 //@Controller
 public class IndexController {
