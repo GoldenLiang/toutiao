@@ -2,11 +2,9 @@ package com.lc.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
- * Created by lc on 2017/6/26.
- */
 @Controller
 public class SettingController {
     @RequestMapping("/setting")
@@ -14,4 +12,5 @@ public class SettingController {
     public String setting() {
         return "Setting:OK";
     }
+    
 }

@@ -1,15 +1,12 @@
 package com.lc.async;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.lc.async.handler.LoginExceptionHandler;
 import com.lc.util.JedisAdapter;
-import com.lc.util.RedisKeyUtil;
-import org.apache.commons.collections.MapUtils;
+import com.lc.util.RedisUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -21,23 +18,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by lc on 2017/7/14.
- */
 @Service
 public class EventConsumer implements InitializingBean, ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private Map<EventType, List<EventHandler>> config = new HashMap<>();
     private ApplicationContext applicationContext;
+    
     @Autowired
     private JedisAdapter jedisAdapter;
-
+ 
     @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
         if (beans != null) {
             for (Map.Entry<String, EventHandler> entry : beans.entrySet()) {
-                List<EventType> eventTypes = entry.getValue().getSupportEventTypes();
+                List<EventType> eventTypes = entry.getValue().getSupportTypes();
                 for (EventType type : eventTypes) {
                     if (!config.containsKey(type)) {
                         config.put(type, new ArrayList<EventHandler>());
@@ -55,7 +50,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
             public void run() {
                 // 从队列一直消费
                 while (true) {
-                    String key = RedisKeyUtil.getEventQueueKey();
+                    String key = RedisUtil.getQueueKey();
                     List<String> messages = jedisAdapter.brpop(0, key);
                     // 第一个元素是队列名字
                     for (String message : messages) {
@@ -64,13 +59,16 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                         }
 
                         EventModel eventModel = JSON.parseObject(message, EventModel.class);
+//                        logger.error("beans == null ?" + beans.toString());
+                        logger.error("containsKey ?" + config.containsKey(eventModel.getType()));
                         // 找到这个事件的处理handler列表
                         if (!config.containsKey(eventModel.getType())) {
-                            logger.error("不能识别的事件");
+                            logger.error("不能识别的事件 :  " + eventModel.getType());
                             continue;
                         }
 
                         for (EventHandler handler : config.get(eventModel.getType())) {
+                        	logger.error("处理 " + eventModel.getType());
                             handler.doHandle(eventModel);
                         }
                     }

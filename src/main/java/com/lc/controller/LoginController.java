@@ -1,8 +1,9 @@
 package com.lc.controller;
 
-import com.lc.model.News;
-import com.lc.model.ViewObject;
-import com.lc.service.NewsService;
+import com.lc.async.EventModel;
+import com.lc.async.EventProducer;
+import com.lc.async.EventType;
+import com.lc.model.HostHolder;
 import com.lc.service.UserService;
 import com.lc.util.ToutiaoUtil;
 import org.slf4j.Logger;
@@ -14,13 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-/**
- * Created by lc on 2017/7/2.
- */
 @Controller
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -28,6 +24,12 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EventProducer eventProducer;
+    
+    @Autowired
+    HostHolder hostHolder;
+    
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String reg(Model model, @RequestParam("username") String username,
@@ -59,7 +61,7 @@ public class LoginController {
     public String login(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
                       @RequestParam(value="rember", defaultValue = "0") int rememberme,
-                        HttpServletResponse response) {
+                      HttpServletResponse response) {
         try {
             Map<String, Object> map = userService.login(username, password);
             if (map.containsKey("ticket")) {
@@ -67,16 +69,22 @@ public class LoginController {
                 cookie.setPath("/");
                 if (rememberme > 0) {
                     cookie.setMaxAge(3600*24*5);
-                }
-                response.addCookie(cookie);
-                return ToutiaoUtil.getJSONString(0, "注册成功");
+                }             
+           
+	            response.addCookie(cookie);
+	            eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+	            		.setActorId((int) map.get("userId"))
+	            		.setExt("username", username)
+	            		.setExt("email", "xxx@163.com"));
+	            
+	            return ToutiaoUtil.getJSONString(0, "登录成功");
             } else {
                 return ToutiaoUtil.getJSONString(1, map);
             }
-
+           
         } catch (Exception e) {
-            logger.error("注册异常" + e.getMessage());
-            return ToutiaoUtil.getJSONString(1, "注册异常");
+            logger.error("登录异常" + e.getMessage());
+            return ToutiaoUtil.getJSONString(1, "登录异常");
         }
     }
 

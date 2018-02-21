@@ -6,20 +6,18 @@
             <div class="jscroll-inner">
                 <div class="daily">
 
-                    #set($cur_date = '')
+                    <h3 class="date">周榜</h3>
                     #foreach($vo in $vos)
-                    #if ($cur_date != $date.format('yyyy-MM-dd', $vo.news.createdDate))
-                        #if ($foreach.index > 0)
-                            </div> ## 上一个要收尾 
-                        #end
-                        #set($cur_date = $date.format('yyyy-MM-dd', $vo.news.createdDate))
+
                     <h3 class="date">
                         <i class="fa icon-calendar"></i>
-                        <span>头条资讯 &nbsp; $date.format('yyyy-MM-dd', $vo.news.createdDate)</span>
+                        #set($cur = $foreach.index + 1)
+                        <span> No. $cur  </span>
+                        <span class="right">
+                         &nbsp; &nbsp; $date.format('yyyy-MM-dd', $vo.news.createdDate)
+                        </span>
                     </h3>
-
-                    <div class="posts">
-                    #end
+					
                     <div class="post">
                         <div class="votebar">
                             #if ($vo.like > 0)
@@ -66,13 +64,11 @@
                 </div>
                 #end
 
-                #end
-
+				#end
 
                 </div>
             </div>
         </div>
-
 
 
 #if ($pop)

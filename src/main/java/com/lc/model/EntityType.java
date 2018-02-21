@@ -1,8 +1,7 @@
 package com.lc.model;
 
-/**
- * Created by lc on 2017/7/7.
- */
 public class EntityType {
-    public static int ENTITY_NEWS = 1;
+    public static int NEWS = 1;
+    public static int COMMENT = 2;
+    public static int USER = 2;
 }

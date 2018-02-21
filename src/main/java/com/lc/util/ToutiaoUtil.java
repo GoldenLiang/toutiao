@@ -1,31 +1,27 @@
 package com.lc.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.lc.controller.LoginController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.util.Map;
 
-/**
- * Created by lc on 2017/7/3.
- */
 public class ToutiaoUtil {
     private static final Logger logger = LoggerFactory.getLogger(ToutiaoUtil.class);
-
-    public static String TOUTIAO_DOMAIN = "http://127.0.0.1:8080/";
-    public static String IMAGE_DIR = "D:/upload/";
-    public static String[] IMAGE_FILE_EXTD = new String[] {"png", "bmp", "jpg", "jpeg"};
-
-    public static boolean isFileAllowed(String fileName) {
-        for (String ext : IMAGE_FILE_EXTD) {
-            if (ext.equals(fileName)) {
-                return true;
-            }
-        }
-        return false;
+    public static String TOUTIAO_DOMAIN = "http://localhost:8080/";
+    public static String IMAGE_DIR = "E:/upload/";
+    private static final String[] imageExt = {"jpg", "jpeg", "bmp","png"};
+    
+    public static boolean isFileAllowed(String fileExt) {
+    	for(String s : imageExt) {
+    		if(fileExt.equals(s)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
+    
     public static String getJSONString(int code) {
         JSONObject json = new JSONObject();
         json.put("code", code);
@@ -75,4 +71,5 @@ public class ToutiaoUtil {
             return null;
         }
     }
+ 
 }

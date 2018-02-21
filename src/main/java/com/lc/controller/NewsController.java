@@ -104,7 +104,6 @@ public class NewsController {
     		
     		commentService.addComment(comment);
     		
-    		//TODO: 异步化
     		//更新评论数量
     		int count = commentService.SelectCount(newsId, EntityType.NEWS);
     		newsService.updateCommentCount(comment.getEntityId(), count);
@@ -170,21 +169,18 @@ public class NewsController {
     }
     
     /**
-     * 上传图片
-     */
-    @RequestMapping(path = {"/uploadImage"}, method = {RequestMethod.POST})
-    @ResponseBody
-    public String uploadImage(Model model, @RequestParam("file") MultipartFile file) {
-    	try {
-			String fileUrl = newsService.saveImage(file);
-			if(fileUrl == null) {
-				return ToutiaoUtil.getJSONString(1, "上传失败");
-			}
-			return ToutiaoUtil.getJSONString(0, fileUrl);
-		} catch (Exception e) {
-			logger.error("上传图片失败" + e.getMessage());
-			e.printStackTrace();
-			return ToutiaoUtil.getJSONString(1, "上传图片失败");
-		}
+     * 删除新闻
+     */ 
+    @RequestMapping(path = {"/news/{newsId}/delete"}, method = {RequestMethod.GET})
+    public String deleteNews(@PathVariable("newsId") int newsId) {
+    	try{
+			if(hostHolder.isAdmin()) {
+				newsService.deleteNews(newsId);
+			} 
+			
+    	} catch(Exception e) {
+    		logger.error("删除新闻错误: " + e.getMessage());
+    	}
+    	return "redirect:/";
     }
 }

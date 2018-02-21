@@ -1,25 +1,34 @@
 package com.lc.dao;
 
-import com.lc.model.LoginTicket;
-import com.lc.model.User;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
-/**
- * Created by lc on 2017/7/2.
- */
+import com.lc.model.LoginTicket;
+
+
 @Mapper
 public interface LoginTicketDAO {
-    String TABLE_NAME = "login_ticket";
-    String INSERT_FIELDS = " user_id, expired, status, ticket ";
-    String SELECT_FIELDS = " id, " + INSERT_FIELDS;
+	 String TABLE_NAME = "login_ticket";
+	    String INSET_FIELDS = "user_id, status, ticket, expired";
+	    String SELECT_FIELDS = "id, user_id, status, ticket, expired";
 
-    @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
-            ") values (#{userId},#{expired},#{status},#{ticket})"})
-    int addTicket(LoginTicket ticket);
+	    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS,
+	            ") values (#{userId},#{status},#{ticket},#{expired})"})
+	    int addTicket(LoginTicket ticket);
 
-    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ticket=#{ticket}"})
-    LoginTicket selectByTicket(String ticket);
+	    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
+	    LoginTicket selectById(int id);
+	    
+	    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ticket=#{ticket}"})
+	    LoginTicket selectByTicket(String ticket);
+	    
+	    @Update({"update ", TABLE_NAME, " set status=#{status} where ticket=#{ticket}"})
+	    void updateTicketStatus(@Param("ticket")String ticket, @Param("status")int status);
 
-    @Update({"update ", TABLE_NAME, " set status=#{status} where ticket=#{ticket}"})
-    void updateStatus(@Param("ticket") String ticket, @Param("status") int status);
+	    @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
+	    void deleteById(int id);
 }

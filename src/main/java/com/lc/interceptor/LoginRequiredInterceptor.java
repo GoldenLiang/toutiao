@@ -1,43 +1,47 @@
 package com.lc.interceptor;
 
-import com.lc.dao.LoginTicketDAO;
-import com.lc.dao.UserDAO;
-import com.lc.model.HostHolder;
-import com.lc.model.LoginTicket;
-import com.lc.model.User;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import com.lc.model.HostHolder;
 
 /**
- * Created by lc on 2017/7/3.
+ * 权限拦截器，未登录不能查看某些页面
+ * @author lc
+ *
  */
 @Component
 public class LoginRequiredInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private HostHolder hostHolder;
+	@Autowired
+	private HostHolder hostHandler;
+	
+	@Override
+	public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        if (hostHolder.getUser() == null) {
-            httpServletResponse.sendRedirect("/?pop=1");
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, ModelAndView arg3)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-    }
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {
+		if(hostHandler.getUser() == null) {
+			response.sendRedirect("/?pop=1");
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-    }
 }

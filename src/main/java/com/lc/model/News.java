@@ -2,9 +2,6 @@ package com.lc.model;
 
 import java.util.Date;
 
-/**
- * Created by rainday on 16/6/30.
- */
 public class News {
 
   private int id;

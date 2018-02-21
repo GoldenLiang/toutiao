@@ -13,7 +13,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 /**
- * @author lc
  * 敏感词过滤
  */
 @Service

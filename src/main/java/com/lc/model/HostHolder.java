@@ -3,21 +3,32 @@ package com.lc.model;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by lc on 2017/7/3.
+ * 当前用户
+ * @author lc
+ *
  */
 @Component
 public class HostHolder {
-    private static ThreadLocal<User> users = new ThreadLocal<User>();
 
-    public User getUser() {
-        return users.get();
-    }
+	private static ThreadLocal<User> users = new ThreadLocal<>();
+	int adminId = 1;
+	
+	public User getUser() {
+		return users.get();
+	}
 
-    public void setUser(User user) {
-        users.set(user);
-    }
+	public void setUsers(User user) {
+		users.set(user);
+	}
 
-    public void clear() {
-        users.remove();;
-    }
+	public void clear() {
+		users.remove();
+	}
+	
+	public boolean isAdmin() {
+		if(getUser() != null) {
+			return getUser().getId() == adminId;
+		} 
+		return false;
+	}
 }

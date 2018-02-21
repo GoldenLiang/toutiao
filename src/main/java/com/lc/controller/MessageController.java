@@ -1,85 +1,41 @@
 package com.lc.controller;
 
-import com.lc.model.*;
-import com.lc.service.*;
-import com.lc.util.ToutiaoUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.lc.model.HostHolder;
+import com.lc.model.Message;
+import com.lc.model.User;
+import com.lc.model.ViewObject;
+import com.lc.service.MessageService;
+import com.lc.service.UserService;
+import com.lc.util.ToutiaoUtil;
 
-/**
- * Created by lc on 2017/7/2.
- */
 @Controller
 public class MessageController {
+
     private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
 
     @Autowired
+    private MessageService messageService;
+    
+    @Autowired
     HostHolder hostHolder;
-
+    
     @Autowired
     UserService userService;
-
-    @Autowired
-    MessageService messageService;
-
-    @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
-    public String conversationDetail(Model model, @RequestParam("conversationId") String conversationId) {
-        try {
-            List<ViewObject> messages = new ArrayList<>();
-            List<Message> conversationList = messageService.getConversationDetail(conversationId, 0, 10);
-            for (Message msg : conversationList) {
-                ViewObject vo = new ViewObject();
-                vo.set("message", msg);
-                User user = userService.getUser(msg.getFromId());
-                if (user == null) {
-                    continue;
-                }
-                vo.set("headUrl", user.getHeadUrl());
-                vo.set("userName", user.getName());
-                messages.add(vo);
-            }
-            model.addAttribute("messages", messages);
-            return "letterDetail";
-        } catch (Exception e) {
-            logger.error("获取站内信列表失败" + e.getMessage());
-        }
-        return "letterDetail";
-    }
-
-    @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
-    public String conversationList(Model model) {
-        try {
-            int localUserId = hostHolder.getUser().getId();
-            List<ViewObject> conversations = new ArrayList<>();
-            List<Message> conversationList = messageService.getConversationList(localUserId, 0, 10);
-            for (Message msg : conversationList) {
-                ViewObject vo = new ViewObject();
-                vo.set("conversation", msg);
-                int targetId = msg.getFromId() == localUserId ? msg.getToId() : msg.getFromId();
-                User user = userService.getUser(targetId);
-                vo.set("headUrl", user.getHeadUrl());
-                vo.set("userName", user.getName());
-                vo.set("targetId", targetId);
-                vo.set("totalCount", msg.getId());
-                vo.set("unreadCount", messageService.getUnreadCount(localUserId, msg.getConversationId()));
-                conversations.add(vo);
-            }
-            model.addAttribute("conversations", conversations);
-            return "letter";
-        } catch (Exception e) {
-            logger.error("获取站内信列表失败" + e.getMessage());
-        }
-        return "letter";
-    }
-
+    
     @RequestMapping(path = {"/msg/addMessage"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String addMessage(@RequestParam("fromId") int fromId,
@@ -94,5 +50,55 @@ public class MessageController {
                 String.format("%d_%d", toId, fromId));
         messageService.addMessage(msg);
         return ToutiaoUtil.getJSONString(msg.getId());
+    }
+    
+    
+    @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
+    public String messageList(Model model) {
+    	try {
+    		int localUserId = hostHolder.getUser().getId();
+			List<Message> conversationList = messageService.getConversationList(localUserId, 0, 20);
+			List<ViewObject> conversations = new ArrayList<>();
+			for(Message message : conversationList) {
+				ViewObject vo = new ViewObject();
+				vo.set("conversation", message);
+				vo.set("conversationCount", messageService.getConversationCount(message.getConversationId()));
+				int targetId = message.getFromId() == localUserId ?  
+						message.getToId() : message.getFromId();
+				User user = userService.getUser(targetId);
+				vo.set("unreadCount", messageService.getUnreadCount(localUserId, message.getConversationId()));
+				vo.set("user", user);
+			  
+				conversations.add(vo);
+			}
+			model.addAttribute("conversations", conversations);
+		} catch (Exception e) {
+			logger.error("请求消息失败" + e.getMessage());
+		}
+    	return "letter";
+    }
+    
+    @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
+    public String messageDetail(Model model, @RequestParam("conversationId") String conversationId) {
+    	try {
+    		List<Message> conversationList = messageService.getConversationDetail(conversationId, 0, 10);
+    		List<ViewObject> conversations = new ArrayList<>();
+    		for(Message message : conversationList) {
+    			ViewObject vo = new ViewObject();
+    			vo.set("message", message);
+    			User user = userService.getUser(message.getFromId());
+    			if(user == null) {
+    				continue;
+    			}
+    			vo.set("headUrl", user.getHeadUrl());
+    			vo.set("userName", user.getName());
+    			conversations.add(vo);
+    		}
+    		 model.addAttribute("messages", conversations);
+             return "letterDetail";
+    	} catch (Exception e) {
+			logger.error("请求消息失败" + e.getMessage());
+		}
+    	return "letterDetail";
     }
 }

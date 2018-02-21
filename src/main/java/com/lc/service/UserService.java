@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-/**
- * Created by lc on 2017/7/2.
- */
 @Service
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -53,7 +50,6 @@ public class UserService {
         user.setPassword(ToutiaoUtil.MD5(password+user.getSalt()));
         userDAO.addUser(user);
 
-        // 登陆
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
         return map;
@@ -79,11 +75,13 @@ public class UserService {
             return map;
         }
 
-        if (!ToutiaoUtil.MD5(password+user.getSalt()).equals(user.getPassword())) {
+        if (!ToutiaoUtil.MD5(password + user.getSalt()).equals(user.getPassword())) {
             map.put("msgpwd", "密码不正确");
             return map;
         }
 
+        map.put("userId", user.getId());
+        
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
         return map;
@@ -103,9 +101,14 @@ public class UserService {
 
     public User getUser(int id) {
         return userDAO.selectById(id);
-    }
+    } 
 
     public void logout(String ticket) {
-        loginTicketDAO.updateStatus(ticket, 1);
+        loginTicketDAO.updateTicketStatus(ticket, 1);
     }
+
+
+	public User getUserByName(String name) {
+		return userDAO.selectByName(name);
+	}
 }

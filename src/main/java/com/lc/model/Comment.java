@@ -2,9 +2,6 @@ package com.lc.model;
 
 import java.util.Date;
 
-/**
- * Created by lc on 2017/7/7.
- */
 public class Comment {
     private int id;
     private int userId;
@@ -12,7 +9,7 @@ public class Comment {
     private int entityType;
     private String content;
     private Date createdDate;
-    private int status;
+    //private int status;
 
     public int getId() {
         return id;
@@ -62,11 +59,11 @@ public class Comment {
         this.createdDate = createdDate;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
+//    public int getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(int status) {
+//        this.status = status;
+//    }
 }
