@@ -60,7 +60,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
 
                         EventModel eventModel = JSON.parseObject(message, EventModel.class);
 //                        logger.error("beans == null ?" + beans.toString());
-                        logger.error("containsKey ?" + config.containsKey(eventModel.getType()));
+//                        logger.info("containsKey ?" + config.containsKey(eventModel.getType()));
                         // 找到这个事件的处理handler列表
                         if (!config.containsKey(eventModel.getType())) {
                             logger.error("不能识别的事件 :  " + eventModel.getType());
@@ -68,7 +68,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                         }
 
                         for (EventHandler handler : config.get(eventModel.getType())) {
-                        	logger.error("处理 " + eventModel.getType());
+                        	logger.info("处理 " + eventModel.getType());
                             handler.doHandle(eventModel);
                         }
                     }

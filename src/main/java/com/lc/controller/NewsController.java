@@ -80,6 +80,7 @@ public class NewsController {
                 news.setUserId(0);
             }
 			
+			newsService.setNewsScore(news);
 			newsService.addNews(news);
 			return ToutiaoUtil.getJSONString(0, "上传新闻成功");
 		} catch (Exception e) {
@@ -176,6 +177,7 @@ public class NewsController {
     	try{
 			if(hostHolder.isAdmin()) {
 				newsService.deleteNews(newsId);
+				newsService.deleteNewsScore(newsId);
 			} 
 			
     	} catch(Exception e) {

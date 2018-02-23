@@ -40,7 +40,7 @@ public interface NewsDAO {
     @Select({"select title from " + TABLE_NAME + " where id = #{id}"})
 	String getNewsTitle(@Param("id")int entityId);
    
-    @Select({"select " + SELECT_FIELDS + " from " + TABLE_NAME +" where created_date > ${date}"})
+    @Select({"select " + SELECT_FIELDS + " from " + TABLE_NAME +" where created_date > '${date}'"})
 	List<News> getLatestNews(@Param("date")String date);     
     
     @Delete({"delete from ", TABLE_NAME, " where id = #{id}"})

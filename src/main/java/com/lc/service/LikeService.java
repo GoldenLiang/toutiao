@@ -12,6 +12,9 @@ public class LikeService {
 	@Autowired
 	JedisAdapter jedisAdapter;
 	
+	@Autowired
+    NewsService newsService;
+	
 	/**
 	 * 喜欢返回1，不喜欢返回-1，否则返回0
 	 * @param userId
@@ -40,6 +43,8 @@ public class LikeService {
 		String dislikeKey = RedisUtil.getDisLikeKey(entityId, entityType);
 		jedisAdapter.srem(dislikeKey, String.valueOf(userId));
 		
+		newsService.setNewsScore(newsService.getById(entityId));
+
 		return jedisAdapter.scard(likeKey);
 	}
 	
@@ -52,6 +57,8 @@ public class LikeService {
 		
 		String dislikeKey = RedisUtil.getDisLikeKey(entityId, entityType);
 		jedisAdapter.sadd(dislikeKey, String.valueOf(userId));
+		
+		newsService.setNewsScore(newsService.getById(entityId));
 		
 		return jedisAdapter.scard(likeKey);
 	}

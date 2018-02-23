@@ -62,7 +62,8 @@ public class HomeController {
     	String result = format.format(today);
     	List<News> newsList = newsService.getLatestNews(result);
     	
-    	newsList = newsService.rankingNews(newsList);
+    	newsList = newsService.setAllNewsScore(newsList);
+    	//newsList = newsService.rankingNews(newsList);
     	List<ViewObject> vos = getVos(newsList);
     	return vos; 
     }
@@ -155,9 +156,18 @@ public class HomeController {
     	return "comment";
     }
     
-    @RequestMapping(path = {"/ranking"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String sortNews(Model model) {
-    	model.addAttribute("vos", getNews(7));
+    @RequestMapping(path = {"/ranking/daily"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public String dailyChart(Model model) {
+    	//日榜
+    	model.addAttribute("vos", getNews(1));
+    	
+    	return "ranking";
+    }
+    
+    @RequestMapping(path = {"/ranking/weekly"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public String weeklyChart(Model model) {
+    	//日榜
+    	model.addAttribute("vos", getNews(1));
     	
     	return "ranking";
     }

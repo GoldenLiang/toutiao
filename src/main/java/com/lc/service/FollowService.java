@@ -18,7 +18,7 @@ public class FollowService {
 
 	@Autowired
 	JedisAdapter jedisAdapter;
-	
+
 	/**
 	 * 关注
 	 * @param userId 关注者

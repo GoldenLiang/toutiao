@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
+import java.util.List;
 import java.util.Map;
 
 public class ToutiaoUtil {
@@ -35,6 +36,16 @@ public class ToutiaoUtil {
         return json.toJSONString();
     }
 
+    private static JSONObject listTojsoJsonObject(List<?> list) {  
+        JSONObject json = new JSONObject();  
+        try {  
+        	json.put("list", list);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        return json;  
+    }  
+    
     public static String getJSONString(int code, Map<String, Object> map) {
         JSONObject json = new JSONObject();
         json.put("code", code);
@@ -43,7 +54,7 @@ public class ToutiaoUtil {
         }
         return json.toJSONString();
     }
-
+    
     public static String MD5(String key) {
         char hexDigits[] = {
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'

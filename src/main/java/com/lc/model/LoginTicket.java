@@ -2,9 +2,6 @@ package com.lc.model;
 
 import java.util.Date;
 
-/**
- * Created by lc on 2017/7/3.
- */
 public class LoginTicket {
     private int id;
     private int userId;

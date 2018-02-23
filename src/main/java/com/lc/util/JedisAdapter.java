@@ -2,6 +2,7 @@ package com.lc.util;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -109,6 +110,12 @@ public class JedisAdapter implements InitializingBean {
 		jedis.set(key, value);
 	}
 
+	public void setExpireObject(String key, Object obj, int seconds) {
+		Jedis jedis = pool.getResource();
+		jedis.set(key, JSON.toJSONString(obj));
+		jedis.expire(key, seconds);
+	}
+	
 	public <T> T getObject(String key, Class<T> clazz) {
 		String value = get(key);
 		if(value != null) {
@@ -117,7 +124,7 @@ public class JedisAdapter implements InitializingBean {
 		return null;
 	}
 
-	private String get(String key) {
+	public String get(String key) {
 		Jedis jedis = null;
 		try {
 			jedis = pool.getResource();
@@ -172,6 +179,36 @@ public class JedisAdapter implements InitializingBean {
 		} catch (Exception e) {
 			logger.error("发生异常" + e.getMessage());
 			return null;
+		} finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+		}
+	}
+	
+	public long zadd(String key, double score, String name) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zadd(key, score, name);
+		} catch (Exception e) {
+			logger.error("发生异常" + e.getMessage());
+			return 0;
+		} finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+		}
+	}
+	
+	public long zrem(String key, String name) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zrem(key, name);
+		} catch (Exception e) {
+			logger.error("发生异常" + e.getMessage());
+			return 0;
 		} finally {
 			if(jedis != null) {
 				jedis.close();
