@@ -20,6 +20,7 @@ import java.util.Map;
 
 @Service
 public class EventConsumer implements InitializingBean, ApplicationContextAware {
+	
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private Map<EventType, List<EventHandler>> config = new HashMap<>();
     private ApplicationContext applicationContext;
@@ -51,30 +52,35 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                 // 从队列一直消费
                 while (true) {
                     String key = RedisUtil.getQueueKey();
-                    List<String> messages = jedisAdapter.brpop(0, key);
-                    // 第一个元素是队列名字
-                    for (String message : messages) {
-                        if (message.equals(key)) {
-                            continue;
-                        }
-
-                        EventModel eventModel = JSON.parseObject(message, EventModel.class);
-//                        logger.error("beans == null ?" + beans.toString());
-//                        logger.info("containsKey ?" + config.containsKey(eventModel.getType()));
-                        // 找到这个事件的处理handler列表
-                        if (!config.containsKey(eventModel.getType())) {
-                            logger.error("不能识别的事件 :  " + eventModel.getType());
-                            continue;
-                        }
-
-                        for (EventHandler handler : config.get(eventModel.getType())) {
-                        	logger.info("处理 " + eventModel.getType());
-                            handler.doHandle(eventModel);
-                        }
-                    }
+	                    List<String> messages = jedisAdapter.brpop(0, key);
+	                    // 第一个元素是队列名字
+	                    for (String message : messages) {
+	                        if (message.equals(key)) {
+	                            continue;
+	                        }
+	
+	                        EventModel eventModel = JSON.parseObject(message, EventModel.class);
+	//                        logger.error("beans == null ?" + beans.toString());
+	//                        logger.info("containsKey ?" + config.containsKey(eventModel.getType()));
+	                        // 找到这个事件的处理handler列表
+	                        if (!config.containsKey(eventModel.getType())) {
+	                            logger.error("不能识别的事件 :  " + eventModel.getType());
+	                            continue;
+	                        }
+	                        
+	                        EventHandler handler;
+							for (int index = 0; index < config.get(eventModel.getType()).size(); index++) {
+	                            handler = config.get(eventModel.getType()).get(index);
+	                            handler.doHandle(eventModel);
+	                            logger.info("handler:" + handler.toString()  + " 处理  " + eventModel.getType());
+							}
+	                        
+	                    }
+                	}
                 }
-            }
+            
         });
+        thread.setName("consumer" + thread.getId());
         thread.start();
     }
 
@@ -82,4 +88,5 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
+
 }

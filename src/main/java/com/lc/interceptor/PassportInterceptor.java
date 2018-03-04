@@ -20,7 +20,6 @@ import com.lc.model.User;
 /**
  * 拦截器
  * @author lc
- *
  */
 @Component
 public class PassportInterceptor implements HandlerInterceptor {

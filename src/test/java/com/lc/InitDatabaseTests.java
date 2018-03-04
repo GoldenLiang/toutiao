@@ -1,6 +1,14 @@
 package com.lc;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lc.ToutiaoApplication;
+import com.lc.async.EventConsumer;
+import com.lc.async.EventHandler;
+import com.lc.async.EventModel;
+import com.lc.async.EventProducer;
+import com.lc.async.EventType;
+import com.lc.async.handler.FollowHandler;
+import com.lc.async.handler.LikeHandler;
 import com.lc.controller.HomeController;
 import com.lc.dao.CommentDAO;
 import com.lc.dao.LoginTicketDAO;
@@ -16,10 +24,14 @@ import com.lc.service.CrawlingNewsService;
 import com.lc.service.FollowService;
 import com.lc.service.MessageService;
 import com.lc.service.NewsService;
+import com.lc.service.UserService;
 import com.lc.util.JedisAdapter;
+import com.lc.util.RedisUtil;
 import com.lc.util.ToutiaoUtil;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +40,19 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ToutiaoApplication.class)
@@ -51,6 +70,9 @@ public class InitDatabaseTests {
     FollowService followService;
     
     @Autowired
+    UserService userService;
+    
+    @Autowired
     MessageService messageService;
     
     @Autowired
@@ -63,7 +85,19 @@ public class InitDatabaseTests {
     CommentDAO commentDAO;
     
     @Autowired
+	EventProducer eventProducer;
+    
+    @Autowired
+    EventConsumer eventConsumer;
+    
+    @Autowired
     JedisAdapter jedisAdapter;
+    
+    @Autowired
+    FollowHandler followHandler;
+    
+    @Autowired
+    LikeHandler likeHandler;
     
     @Test
     public void testJedis() {
@@ -189,8 +223,15 @@ public class InitDatabaseTests {
     }
     
     @Test
-    public void TestCrawling() {
-    	crawlingNewsService.saveCrawlingNews();
+    public void TestHandler() throws Exception {
+    	EventModel model = new EventModel(EventType.FOLLOW)
+                .setActorId(1).setEntityId(1)
+                .setEntityType(EntityType.USER).setEntityOwnerId(1);
+//    	System.out.println(userService.getUser(model.getActorId()));
+//    	eventConsumer.afterPropertiesSet();
+    	for(int i = 0; i < 1000; i++)
+    		jedisAdapter.lpush(RedisUtil.getQueueKey(), JSONObject.toJSONString(model));
+//    	eventConsumer.afterPropertiesSet();
     }
     
     @Test
@@ -201,6 +242,12 @@ public class InitDatabaseTests {
     	user.setPassword(ToutiaoUtil.MD5("123456" + user.getSalt()));
     	userDAO.updatePassword(user);
     }
+    
+    @Test
+    public void testCrawlingNews() {
+    	crawlingNewsService.saveCrawlingNews();
+    }
+    
 }
 
 

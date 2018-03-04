@@ -1,8 +1,8 @@
 package com.lc.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.lc.controller.LoginController;
+import com.lc.crawler.IPModel.IPMessage;
+import com.lc.crawler.IPModel.SerializeUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -168,6 +170,21 @@ public class JedisAdapter implements InitializingBean {
         }
 	}
 	
+	public String rpop(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.rpop(key);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return null;
+		} finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+	}
+	
 	/**
 	 * 是否关注
 	 */
@@ -293,6 +310,85 @@ public class JedisAdapter implements InitializingBean {
         return null;
     }
 
+    public Long llen(String key) {
+    	Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.llen(key);
+		} catch (Exception e) {
+			logger.error("发生异常" + e.getMessage());		
+		} finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+		}
+		return null;
+	}
+    
+    /**
+     * 将ip信息保存在Redis列表中
+     */
+    public void setIPToList(List<IPMessage> ipMessages) {
+    	Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+	        for (IPMessage ipMessage : ipMessages) {
+	            //首先将ipMessage进行序列化
+	            byte[] bytes = SerializeUtil.serialize(ipMessage);
+	
+	            jedis.rpush("IPPool".getBytes(), bytes);
+	        }
+		} catch (Exception e) {
+			logger.error("发生异常" + e.getMessage());		
+		} finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+		}
+    }
+
+    /**
+     * 将Redis中保存的对象进行反序列化
+     */
+    public List<IPMessage> getIPByList() {
+        List<IPMessage> IPPool = new ArrayList<>();
+        Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+	        for(int i = 0 ; i < 7; i++) {
+	        	Object o = SerializeUtil.unserialize(jedis.lindex("IPPool".getBytes(), i));
+		        if (o instanceof IPMessage) {
+		        	IPPool.add((IPMessage)o);
+		        } else {
+		            logger.info("不是IPMessage的一个实例~");
+		            continue;
+		        }
+	        }
+		} catch (Exception e) {
+			logger.error("发生异常" + e.getMessage());		
+		} finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+		}
+        return IPPool;
+    }
+
+    public void deleteKey(String key) {
+    	Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			jedis.del(key);
+		} catch (Exception e) {
+			logger.error("发生异常" + e.getMessage());		
+		} finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+		}
+		return ;
+    }
+    
 	public Jedis getJedis() {
         return pool.getResource();
     }

@@ -38,7 +38,7 @@ public class NewsService {
     }
     
     public synchronized List<News> setAllNewsScore(List<News> newsList) { 
-    	List<News> resList =  JSONObject.parseArray(jedisAdapter.get("newsList"), News.class);
+    	List<News> resList =  JSONObject.parseArray(jedisAdapter.get("newsListCache"), News.class);
     	if(resList == null) {
 	    	for(News news : newsList) {
 		    	double score = rankingNewsAlgorithm(news);

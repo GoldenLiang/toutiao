@@ -16,6 +16,7 @@ import java.util.*;
 @Service
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    
     @Autowired
     private UserDAO userDAO;
 
@@ -47,9 +48,8 @@ public class UserService {
         user.setSalt(UUID.randomUUID().toString().substring(0, 5));
         String head = String.format("http://images.lc.com/head/%dt.png", new Random().nextInt(1000));
         user.setHeadUrl(head);
-        user.setPassword(ToutiaoUtil.MD5(password+user.getSalt()));
+        user.setPassword(ToutiaoUtil.MD5(password + user.getSalt()));
         userDAO.addUser(user);
-
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
         return map;
@@ -106,7 +106,6 @@ public class UserService {
     public void logout(String ticket) {
         loginTicketDAO.updateTicketStatus(ticket, 1);
     }
-
 
 	public User getUserByName(String name) {
 		return userDAO.selectByName(name);

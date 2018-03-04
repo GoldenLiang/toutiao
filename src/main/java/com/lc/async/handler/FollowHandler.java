@@ -31,15 +31,16 @@ public class FollowHandler implements EventHandler {
 	@Override
 	public void doHandle(EventModel model) {
 		Message message = new Message();
-		if(hostHolder.getUser() == null) { 
+		if(hostHolder  == null || hostHolder.getUser() == null) { 
 			return;
 		}
 		
 		message.setFromId(hostHolder.getUser().getId());
 		message.setToId(model.getActorId());
 		User user = userService.getUser(model.getActorId());
-		message.setContent("用户" + user.getName() + "关注了你"
-				+ "http://127.0.0.1:8080/news/" + model.getEntityId());
+		message.setContent("用户" + user.getName() + "关注了你");
+		message.setConversationId(message.getFromId() < message.getToId() ? String.format("%d_%d", message.getFromId(), message.getToId()) :
+            String.format("%d_%d", message.getToId(), message.getFromId()));
 		message.setCreatedDate(new Date());
 		messageService.addMessage(message); 
 	}
