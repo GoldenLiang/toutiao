@@ -8,7 +8,7 @@
 ![技术架构模块设计](https://i.loli.net/2018/03/06/5a9ea33d7743d.png)
 
 ## 总体流程
-![总体流程](https://i.loli.net/2018/03/06/5a9ea3cd8e74a.png)
+![总体流程](https://i.loli.net/2018/03/06/5a9ea9b0a153c.png)
 
 ## Controller流程
 ![Controller流程](https://i.loli.net/2018/03/06/5a9ea3f1aa7c9.png)
