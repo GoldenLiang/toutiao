@@ -172,7 +172,7 @@ public class InitDatabaseTests {
 	    	LoginTicket loginTicket = new LoginTicket();
 	        loginTicket.setStatus(0);
 	        loginTicket.setUserId(i + 1);
-	        loginTicket.setExpired(new Date());
+	        loginTicket.setExpired(System.nanoTime());
 	        loginTicket.setTicket(String.format("ticket%d", i + 1));
 	        
 	        ticketDAO.addTicket(loginTicket);

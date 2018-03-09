@@ -1,8 +1,5 @@
 package com.lc.controller;
 
-import com.lc.async.EventModel;
-import com.lc.async.EventProducer;
-import com.lc.async.EventType;
 import com.lc.model.HostHolder;
 import com.lc.service.UserService;
 import com.lc.util.ToutiaoUtil;
@@ -23,21 +20,19 @@ public class LoginController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    EventProducer eventProducer;
     
     @Autowired
     HostHolder hostHolder;
     
-    @RequestMapping(path = {"/reg/"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
     @ResponseBody
     public String reg(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
+                      @RequestParam("captchaImage") String CaptchaCode, 
                       @RequestParam(value="rember", defaultValue = "0") int rememberme,
                       HttpServletResponse response) {
         try {
-            Map<String, Object> map = userService.register(username, password);
+            Map<String, Object> map = userService.register(username, password, CaptchaCode);
             if (map.containsKey("ticket")) {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
@@ -56,26 +51,24 @@ public class LoginController {
         }
     }
 
-    @RequestMapping(path = {"/login/"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(path = {"/login/"}, method = {RequestMethod.POST})
     @ResponseBody
     public String login(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
+                      @RequestParam("captchaImage") String CaptchaCode, 
                       @RequestParam(value="rember", defaultValue = "0") int rememberme,
                       HttpServletResponse response) {
-        try {
-            Map<String, Object> map = userService.login(username, password);
+        try { 
+            Map<String, Object> map = userService.login(username, password, CaptchaCode);
             if (map.containsKey("ticket")) {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
-                cookie.setPath("/");
+                cookie.setPath("/"); 
                 if (rememberme > 0) {
                     cookie.setMaxAge(3600*24*5);
                 }             
            
 	            response.addCookie(cookie);
-	            eventProducer.fireEvent(new EventModel(EventType.LOGIN)
-	            		.setActorId((int) map.get("userId"))
-	            		.setExt("username", username)
-	            		.setExt("email", "xxx@163.com"));
+	            
 	            
 	            return ToutiaoUtil.getJSONString(0, "登录成功");
             } else {

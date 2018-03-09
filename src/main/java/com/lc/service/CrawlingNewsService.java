@@ -117,6 +117,7 @@ public class CrawlingNewsService {
 				String[] newsLinks = new String[newsLen + news2.size()];
 				int count = 0;
 				for(Element src : links) {
+					if(count == newsLinks.length) break;
 					if(src.attr("href").startsWith("/g"))
 						newsLinks[count++] = src.attr("href");
 				}
@@ -125,6 +126,7 @@ public class CrawlingNewsService {
 				String[] imageLinks = new String[newsLen + news2.size()];
 				int countImage = 0;
 				for(Element src : pngs) {
+					if(countImage == imageLinks.length) break;
 					if(!src.attr("src").startsWith("//s"))
 						imageLinks[countImage++] = src.attr("src");
 				}

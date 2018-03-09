@@ -16,6 +16,11 @@
                         '<label class="control-label">密码</label>',
                         '<div class="control-group js-pwd"><input type="password" placeholder="请输入密码"></div>',
                     '</div>',
+                    '<div class="form-group">',
+                    	'<label class="control-label">验证码</label>',
+                    	'<div class="control-group js-captcha"><input type="email" placeholder="请输入验证码"></div>',
+                    	'<img id="captchaImage" src="/captcha/getcaptcha"/>',
+                    '</div>',
                     '<div class="form-group about-pwd">',
                         '<div class="keep-pwd">',
                             '<label><input type="checkbox" class="js-rember"> 记住登录</label>',
@@ -37,6 +42,7 @@
                 var oEl = that.getEl();
                 that.emailIpt = oEl.find('div.js-email');
                 that.pwdIpt = oEl.find('div.js-pwd');
+                that.captchaImageIpt = oEl.find('div.js-captcha');
                 that.initCpn();
             }
         }, {
@@ -56,6 +62,7 @@
                     data: {
                         username: oData.email,
                         password: oData.pwd,
+                        captchaImage:oData.captchaImage,
                         rember: oData.rember ? 1 : 0
                     }
                 }).done(function (oResult) {
@@ -65,6 +72,7 @@
                     } else {
                         oResult.msgname && that.iptError(that.emailIpt, oResult.msgname);
                         oResult.msgpwd && that.iptError(that.pwdIpt, oResult.msgpwd);
+                        oResult.msgcap && that.iptError(that.captchaImageIpt, oResult.msgcap);
                     }
                 }).fail(function () {
                     alert('出现错误，请重试');
@@ -95,6 +103,7 @@
                     } else {
                         oResult.msgname && that.iptError(that.emailIpt, oResult.msgname);
                         oResult.msgpwd && that.iptError(that.pwdIpt, oResult.msgpwd);
+                        oResult.msgcap && that.iptError(that.captchaImageIpt, oResult.msgcap);
                     }
                 }).fail(function () {
                     alert('出现错误，请重试');
@@ -140,16 +149,19 @@
         var oEl = that.getEl();
         var oEmailIpt = that.emailIpt.find('input');
         var oPwdIpt = that.pwdIpt.find('input');
+        var oCaptchaImageIpt = that.captchaImageIpt.find('input');
         var oRemberChk = oEl.find('.js-rember');
         if (arguments.length === 0) {
             return {
                 email: $.trim(oEmailIpt.val()),
                 pwd: $.trim(oPwdIpt.val()),
+                captchaImage: $.trim(oCaptchaImageIpt.val()),
                 rember: oRemberChk.prop('checked')
             };
         } else {
             oEmailIpt.val($.trim(oData.email));
             oPwdIpt.val($.trim(oData.pwd));
+            oCaptchaImageIpt.val($.trim(oData.captchaImage));
             oRemberChk.prop('checked', !!oData.rember);
         }
     }

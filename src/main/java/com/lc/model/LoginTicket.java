@@ -5,9 +5,18 @@ import java.util.Date;
 public class LoginTicket {
     private int id;
     private int userId;
-    private Date expired;
+    private long expired;
     private int status;// 0有效，1无效
     private String ticket;
+    private String salt;
+    
+    public String getSalt() {
+		return salt;
+	}
+    
+    public void setSalt(String salt) {
+		this.salt = salt;
+	}
 
     public String getTicket() {
         return ticket;
@@ -33,12 +42,12 @@ public class LoginTicket {
         this.userId = userId;
     }
 
-    public Date getExpired() {
+    public long getExpired() {
         return expired;
     }
 
-    public void setExpired(Date expired) {
-        this.expired = expired;
+    public void setExpired(long time) {
+        this.expired = time;
     }
 
     public int getStatus() {

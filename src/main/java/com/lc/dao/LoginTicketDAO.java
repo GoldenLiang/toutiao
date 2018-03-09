@@ -13,11 +13,11 @@ import com.lc.model.LoginTicket;
 @Mapper
 public interface LoginTicketDAO {
 	 String TABLE_NAME = "login_ticket";
-	    String INSET_FIELDS = "user_id, status, ticket, expired";
-	    String SELECT_FIELDS = "id, user_id, status, ticket, expired";
+	    String INSET_FIELDS = "user_id, status, ticket, expired, salt";
+	    String SELECT_FIELDS = "id, user_id, status, ticket, expired, salt";
 
-	    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS,
-	            ") values (#{userId},#{status},#{ticket},#{expired})"})
+	    @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS, 
+	            ") values (#{userId},#{status},#{ticket},#{expired},#{salt})"})
 	    int addTicket(LoginTicket ticket);
 
 	    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})

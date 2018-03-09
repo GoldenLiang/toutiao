@@ -1,15 +1,13 @@
 package com.lc.model;
 
-/**
- * Created by lc on 2017/6/26.
- */
 public class User {
     private int id;
     private String name;
     private String password;
     private String salt;
     private String headUrl;
-
+    private String ip;
+    
     public User() {
 
     }
@@ -20,6 +18,14 @@ public class User {
         this.headUrl = "";
     }
 
+    public String getIp() {
+		return ip;
+	}
+    
+    public void setIp(String ip) {
+		this.ip = ip;
+	}
+    
     public String getName() {
         return name;
     }

@@ -1,7 +1,5 @@
 package com.lc.interceptor;
 
-import java.util.Date;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,14 +46,15 @@ public class PassportInterceptor implements HandlerInterceptor {
 		
 		if(ticket != null) {
 			LoginTicket loginTicket = ticketDAO.selectByTicket(ticket);
-			//如果 Ticket 为null 或 过期 或是 status 不为0，都不合法
-			if(loginTicket == null || loginTicket.getExpired().before(new Date()) || 
-					loginTicket.getStatus() != 0) {
-				return true;
-			}
-			
 			//当前用户设置为 Ticket 的 user_id，id 通过 username 找到
 			User user = userDAO.selectById(loginTicket.getUserId());
+			
+			//如果 Ticket 为null 或 过期 或是 status 不为0，都不合法
+			if(loginTicket == null || loginTicket.getExpired() > System.nanoTime() || 
+					loginTicket.getStatus() != 0 ) {
+				return true;
+			}			
+				
 			hostHolder.setUsers(user);
 		}
 		return true;

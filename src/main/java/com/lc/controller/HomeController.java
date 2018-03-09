@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,10 +57,10 @@ public class HomeController {
     
     public List<ViewObject> getNews(int past) {  	
     	Calendar calendar =	Calendar.getInstance();
-    	calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - past);
-    	Date today = calendar.getTime();
-    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-    	String result = format.format(today);
+    	calendar.add(Calendar.DATE, -past);    //得到前一天
+		Date date = calendar.getTime();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    	String result = df.format(date);
     	List<News> newsList = newsService.getLatestNews(result);
     	
     	newsList = newsService.setAllNewsScore(newsList);
@@ -166,8 +167,8 @@ public class HomeController {
     
     @RequestMapping(path = {"/ranking/weekly"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String weeklyChart(Model model) {
-    	//日榜
-    	model.addAttribute("vos", getNews(1));
+    	//周榜
+    	model.addAttribute("vos", getNews(7));
     	
     	return "ranking";
     }
