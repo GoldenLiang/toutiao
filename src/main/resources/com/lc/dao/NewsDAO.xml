@@ -17,4 +17,5 @@
         ORDER BY created_date DESC
         LIMIT #{offset},#{limit}
     </select>
+    
 </mapper>

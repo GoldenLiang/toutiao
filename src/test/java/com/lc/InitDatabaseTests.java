@@ -215,7 +215,8 @@ public class InitDatabaseTests {
         String result = format.format(today);
         System.out.println(result);
         
-        List<News> list = newsService.getLatestNews("2018-02-21");
+        List<News> list = null;
+        //list = newsService.getLatestNews("2018-02-21");
         for(News news : list) {
         	System.out.println(news.getTitle());
         	System.out.println(news.getLink());

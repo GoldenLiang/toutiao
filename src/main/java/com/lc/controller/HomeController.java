@@ -48,22 +48,17 @@ public class HomeController {
 
     @Autowired
 	LikeService likeService;
-
+    
     private List<ViewObject> getNews(int userId, int offset, int limit) {
         List<News> newsList = newsService.getLatestNews(userId, offset, limit);
         List<ViewObject> vos = getVos(newsList);
         return vos; 
     }  
     
-    public List<ViewObject> getNews(int past) {  	
-    	Calendar calendar =	Calendar.getInstance();
-    	calendar.add(Calendar.DATE, -past);    //得到前一天
-		Date date = calendar.getTime();
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    	String result = df.format(date);
-    	List<News> newsList = newsService.getLatestNews(result);
+    public List<ViewObject> getNews(String date) {  	
+    	//List<News> newsList = newsService.getLatestNews(past);
     	
-    	newsList = newsService.setAllNewsScore(newsList);
+    	List<News> newsList = newsService.setAllNewsScore(date);
     	//newsList = newsService.rankingNews(newsList);
     	List<ViewObject> vos = getVos(newsList);
     	return vos; 
@@ -149,6 +144,13 @@ public class HomeController {
     	return "home";
     }
      
+    @RequestMapping(path = {"/page/{pageNum}"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public String moreNews(Model model, @PathVariable("pageNum")int pageNum) {
+    	model.addAttribute("vos", getNews(0, pageNum * 10, 20));
+    	
+    	return "home";
+    }
+    
     @RequestMapping(path = {"/user/{userId}/comments"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String userComments(Model model, @PathVariable("userId")int userId) {
     	model.addAttribute("comments", getComments(userId));
@@ -160,7 +162,7 @@ public class HomeController {
     @RequestMapping(path = {"/ranking/daily"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String dailyChart(Model model) {
     	//日榜
-    	model.addAttribute("vos", getNews(1));
+    	model.addAttribute("vos", getNews("daily"));
     	
     	return "ranking";
     }
@@ -168,7 +170,7 @@ public class HomeController {
     @RequestMapping(path = {"/ranking/weekly"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String weeklyChart(Model model) {
     	//周榜
-    	model.addAttribute("vos", getNews(7));
+    	model.addAttribute("vos", getNews("weekly"));
     	
     	return "ranking";
     }

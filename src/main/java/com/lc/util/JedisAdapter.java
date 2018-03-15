@@ -278,6 +278,21 @@ public class JedisAdapter implements InitializingBean {
 		return null;
 	}
 	
+	public Long zunionstore(String key, String...sets) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.zunionstore(key, sets);
+		} catch (Exception e) {
+			logger.error("发生异常" + e.getMessage());		
+		} finally {
+			if(jedis != null) {
+				jedis.close();
+			}
+		}
+		return null;
+	}
+	
 	public Transaction multi(Jedis jedis) {
         try {
             return jedis.multi();

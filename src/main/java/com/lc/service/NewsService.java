@@ -15,7 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -37,14 +40,17 @@ public class NewsService {
     	return newsDAO.selectCount(userId);
     }
     
-    public synchronized List<News> setAllNewsScore(List<News> newsList) { 
+    public synchronized List<News> setAllNewsScore(String date) { 
     	List<News> resList =  JSONObject.parseArray(jedisAdapter.get("newsListCache"), News.class);
     	if(resList == null) {
-	    	for(News news : newsList) {
-		    	double score = rankingNewsAlgorithm(news);
-		    	jedisAdapter.zadd("newsList", score, String.valueOf(news.getId()));
+	    	if(date.equals("daily")) {
+	    		resList =  getNewsFromSet(jedisAdapter.zrevrange(getDateKey(0), 0, 9));
+	    	} else if(date.equals("weekly")) {
+	    		jedisAdapter.zunionstore("rank:last_week", getDateKey(0), getDateKey(1), getDateKey(2), 
+	    				getDateKey(3), getDateKey(4), getDateKey(5), getDateKey(6));
+	    		resList =  getNewsFromSet(jedisAdapter.zrevrange("rank:last_week", 0, 9));
 	    	}
-	    	resList =  getNewsFromSet(jedisAdapter.zrevrange("newsList", 0, 9));
+	    	
 	    	jedisAdapter.setExpireObject("newsListCache", resList, 60);
     	}
 	    return resList;
@@ -52,13 +58,21 @@ public class NewsService {
     
     public void setNewsScore(News news) {  
     	double score = rankingNewsAlgorithm(news);
-    	jedisAdapter.zadd("newsList", score, String.valueOf(news.getId()));
+    	jedisAdapter.zadd(getDateKey(0), score, String.valueOf(news.getId()));
     }
     
     public void deleteNewsScore(int newsId) {  
     	jedisAdapter.zrem("newsList", String.valueOf(newsId));
     }
 	
+    public String getDateKey(int past) {
+    	Calendar calendar =	Calendar.getInstance();
+		Date today = calendar.getTime();
+		calendar.add(Calendar.DATE, -past);    //得到前一天
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    	return "rank:" + df.format(today);
+    }
+    
     public double rankingNewsAlgorithm(News news) {
     	Date date = new Date();
 	    double G = 1.8;
@@ -138,7 +152,7 @@ public class NewsService {
 		return newsDAO.getNewsTitle(entityId);
 	}
 
-	public List<News> getLatestNews(String date) {
+	public List<News> getLatestNews(int date) {
 		return newsDAO.getLatestNews(date);
 	}
 
