@@ -79,8 +79,10 @@ public class UserService {
         user.setPassword(ToutiaoUtil.MD5(password + user.getSalt()));
         user.setIp(getIpAddr(request));
         userDAO.addUser(user);
-        String ticket = addLoginTicket(user);
-        map.put("ticket", ticket);
+        if(loginTicketDAO.selectById(user.getId()).getExpired() > System.nanoTime()) {
+	        String ticket = addLoginTicket(user);
+	        map.put("ticket", ticket);
+        }
         return map;
     }
 
@@ -122,17 +124,18 @@ public class UserService {
 
         map.put("userId", user.getId());
         
-        String ticket = addLoginTicket(user);
-        if(ticket.equals("")) {
-        	map.put("msgpwd", "ip地址异常，请重新验证");
-        	eventProducer.fireEvent(new EventModel(EventType.LOGIN)
-            		.setActorId((int) map.get("userId"))
-            		.setExt("username", username)
-            		.setExt("email", "xxx@qq.com"));
-        	return map;
+        if(loginTicketDAO.selectById(user.getId()).getExpired() > System.nanoTime()) {
+        	String ticket = addLoginTicket(user);
+			if (ticket.equals("")) {
+				map.put("msgpwd", "ip地址异常，请重新验证");
+				eventProducer.fireEvent(new EventModel(EventType.LOGIN).setActorId((int) map.get("userId"))
+						.setExt("username", username).setExt("email", "xxx@qq.com"));
+				return map;
+	        }
+	        
+	        map.put("ticket", ticket);
         }
-        
-        map.put("ticket", ticket);
+       
         return map;
     }
 

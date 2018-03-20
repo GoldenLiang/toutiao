@@ -20,7 +20,8 @@ public interface LoginTicketDAO {
 	            ") values (#{userId},#{status},#{ticket},#{expired},#{salt})"})
 	    int addTicket(LoginTicket ticket);
 
-	    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
+	    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where user_id=#{id} "
+	    		+ "order by id DESC limit 1"})
 	    LoginTicket selectById(int id);
 	    
 	    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ticket=#{ticket}"})
